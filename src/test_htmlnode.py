@@ -42,7 +42,7 @@ class HTMLTest(unittest.TestCase):
             parent_node.to_html(),
             "<div><span><b>grandchild</b></span></div>",
         )
-        print(parent_node.to_html())
+    
 
     def test_to_html_many_children(self):
         node = ParentNode(

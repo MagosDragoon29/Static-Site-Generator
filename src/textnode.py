@@ -1,11 +1,12 @@
 from htmlnode import LeafNode
+import copy
 
-text_type_text = "text"
-text_type_bold = "bold"
-text_type_italic = "italic"
-text_type_code = "code"
-text_type_link = "link"
-text_type_image = "image"
+text_type_text = "text" #no delimiter
+text_type_bold = "bold" #double asterisk delimiter
+text_type_italic = "italic" #single asterisk delimiter
+text_type_code = "code" #delimiter: ``
+text_type_link = "link" #delimiter is []
+text_type_image = "image" #delimiter is ![title](link)
 
 class  TextNode:
     def __init__(self, TEXT, TEXT_TYPE, URL=None):
@@ -14,6 +15,8 @@ class  TextNode:
         self.url = URL
    
     def __repr__(self):
+        if self.url is None: 
+            return f"Textnode({self.text}, {self.text_type})"
         return f"TextNode({self.text}, {self.text_type}, {self.url})"
    
     def __eq__(self, other):
@@ -38,3 +41,7 @@ def text_node_to_html_node(text_node):
         return LeafNode("img", "", {"src":text_node.url, "alt":text_node.text})
     else:
         raise Exception (f"unsupported text type: {text_node.text_type}")       
+    
+
+
+        
