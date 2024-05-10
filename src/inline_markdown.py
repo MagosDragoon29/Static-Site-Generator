@@ -13,17 +13,16 @@ from textnode import (
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
    result = []
    for node in old_nodes:
+        new_nodes = []
+        node_text = copy.copy(node.text).split(delimiter)
+
         if node.text_type != text_type_text: 
             result.append(node)
             continue
         
-        
         if len(node_text) % 2 == 0:
-            raise ValueError("Invalid MarkDown, formatted section not closed!"
+            raise ValueError("Invalid MarkDown, formatted section not closed!")
 
-        new_nodes = []
-        node_text = copy.copy(node.text).split(delimiter)
-                         
         if node.text.startswith(delimiter):
             new_nodes.append(TextNode(node_text[0], node.text_type))
         for i in range (0, len(node_text)):
