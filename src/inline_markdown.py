@@ -40,8 +40,10 @@ def split_nodes_image(old_nodes):
     result = []
     for node in old_nodes:
         images = extract_markdown_images(node.text)
-        contents = node.text.split("!",")")
+        contents = re.split(r'!|\)', node.text)
         for item in contents:
+            if item == '':
+                continue
             if '[' in item:
                 result.append(TextNode(TEXT=images[0][0], TEXT_TYPE=text_type_image, URL=images[0][1]))
                 images.pop(0)
@@ -56,8 +58,10 @@ def split_nodes_link(old_nodes):
     result = []
     for node in old_nodes: 
         links = extract_markdown_links(node.text)
-        contents = node.text.split("[", ")")
+        contents = re.split(r'\[|\)', node.text)
         for item in contents: 
+            if item == '':
+                continue
             if "]" in item:
                 result.append(TextNode(TEXT=links[0][0],TEXT_TYPE=text_type_link, URL=links[0][1]))
                 links.pop(0)
