@@ -95,3 +95,5 @@ def extract_markdown_links(TEXT):
 
 def text_to_textnodes(text):
     start = TextNode(text, text_type_text)
+    result = split_nodes_link(split_nodes_image(split_nodes_delimiter(split_nodes_delimiter(split_nodes_delimiter(start, "**", text_type_bold), "*", text_type_italic), "`", text_type_code)))
+    return result
