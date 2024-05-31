@@ -99,7 +99,6 @@ def markdown_to_html_node(markdown):
             finale.children.append(ParentNode(tag = f"{tag_preformatted}", children = [LeafNode(tag = f"{tag_code}", value = content)]))
         elif block_type == block_type_quote:
             content = " ".join([line.lstrip('> ').strip() for line in block.split("\n")])
-            #quote_content = markdown_to_html_node(content)
             finale.children.append(LeafNode(tag = f"{tag_quote}",value = content))
         elif block_type == block_type_unordered:
             items = block.split("\n")
