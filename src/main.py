@@ -1,6 +1,8 @@
 import os
 import shutil
 from textnode import TextNode
+from markdown_blocks import markdown_to_html_node
+from htmlnode import (HTMLNode, LeafNode, ParentNode)
 #page intentionally left blank
 
 #print("hello world")
@@ -12,6 +14,8 @@ public_dir = os.path.join(root_dir, 'public')
 def main():
     #test_case = TextNode("This is a TextNode", "bold", "https://www.boot.dev/")
     #print(test_case)
+    copy_files(static)
+    generate_page('content/index.md', 'template.html', 'public')
     pass
 
 def copy_files(source_dir, sub_dir = None):
@@ -41,6 +45,27 @@ def extract_title(markdown):
             return line.lstrip("# ").strip()
     raise Exception ("Document requires a title as Header 1")
 
-
+def generate_page(from_path, template_path, dest_path):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}.")
+    with open(from_path, 'r', encoding='utf-8') as file:
+        contents = file.read()
+    with open(template_path, 'r', encoding='utf-8') as temp:
+        template = temp.read()
+    title = extract_title(contents)
+    base_name = os.path.basename(from_path)
+    name, ext = os.path.splitext(base_name)
+    html_contents = ""
+    if ext.lower() == '.md':
+        dest_file_name = f"{name}.html"
+    else:
+        raise ValueError("Source file does not have a .md extension")
+    full_dest_path = os.path.join(dest_path, dest_file_name)
+    os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+    nodes = markdown_to_html_node(contents)
+    for node in nodes:
+        html_contents += node.to_html()
+    result = template.replace("{{ Title }}", title).replace("{{ Content }}", html_contents)
+    with open(full_dest_path, 'w', encoding='utf-8') as html_file:
+        html_file.write(result)
 # page intentionally left blank    
 main()
