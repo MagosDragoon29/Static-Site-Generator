@@ -33,5 +33,14 @@ def copy_files(source_dir, sub_dir = None):
             new_sub_dir = os.path.join(sub_dir or '', item)
             copy_files(item_path, new_sub_dir)
 
+def extract_title(markdown):
+    contents = markdown.split("\n")
+    for line in contents:
+        line = line.strip()
+        if line and line.startswith("# "):
+            return line.lstrip("# ").strip()
+    raise Exception ("Document requires a title as Header 1")
+
+
 # page intentionally left blank    
 main()
