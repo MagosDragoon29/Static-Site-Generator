@@ -8,21 +8,24 @@ from htmlnode import (HTMLNode, LeafNode, ParentNode)
 #print("hello world")
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
-static_dir = os.path.join(root_dir, 'static')
-public_dir = os.path.join(root_dir, 'public')
+parent_dir = os.path.dirname(root_dir)
+static_dir = os.path.join(parent_dir, 'static')
+public_dir = os.path.join(parent_dir, 'public')
+
+if not os.path.exists(static_dir):
+    print(f"Error: the directory {static_dir} does not exist.")
 
 def main():
     #test_case = TextNode("This is a TextNode", "bold", "https://www.boot.dev/")
     #print(test_case)
-    copy_files(static)
-    generate_page('content/index.md', 'template.html', 'public')
+    copy_files(static_dir)
+    generate_page(os.path.join(parent_dir,'content/index.md'), os.path.join(parent_dir,'template.html'), public_dir)
     pass
 
 def copy_files(source_dir, sub_dir = None):
-    public_list = os.listdir(public_dir)
-    if not public_list:
+    if os.path.exists(public_dir):
         shutil.rmtree(public_dir)
-        os.makedirs(public_dir)
+    os.makedirs(public_dir)
     all_items = os.listdir(source_dir)
     destination_dir = public_dir
     if sub_dir != None:
@@ -62,8 +65,7 @@ def generate_page(from_path, template_path, dest_path):
     full_dest_path = os.path.join(dest_path, dest_file_name)
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     nodes = markdown_to_html_node(contents)
-    for node in nodes:
-        html_contents += node.to_html()
+    html_contents += nodes.to_html()
     result = template.replace("{{ Title }}", title).replace("{{ Content }}", html_contents)
     with open(full_dest_path, 'w', encoding='utf-8') as html_file:
         html_file.write(result)

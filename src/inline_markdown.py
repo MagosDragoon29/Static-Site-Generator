@@ -22,7 +22,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
             continue
         
         if len(node_text) % 2 == 0:
-            raise ValueError("Invalid MarkDown, formatted section not closed!")
+            raise ValueError(f"Invalid MarkDown, formatted section not closed in node: {node}")
 
         if node.text.startswith(delimiter):
             new_nodes.append(TextNode(node_text[0], node.text_type))
@@ -118,9 +118,3 @@ def text_to_textnodes(text):
     links = split_nodes_link(images)
     return links
 
-def markdown_to_blocks(markdown):
-    blocks = []
-    contents = markdown.split("\n\n")
-    for content in contents: 
-        blocks.append(content.strip())
-    return blocks

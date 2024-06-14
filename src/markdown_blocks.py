@@ -71,6 +71,11 @@ def block_to_block_type(block):
     else:
         return block_type_paragraph
     
+def strip_initial_char(line, chars):
+    if line and line [0] in chars: 
+        return line[1:].lstrip()
+    return line
+
     
 def markdown_to_html_node(markdown):
     finale = ParentNode(tag=f"{tag_div}", children=[], props=None)
@@ -103,8 +108,9 @@ def markdown_to_html_node(markdown):
         elif block_type == block_type_unordered:
             items = block.split("\n")
             list_items = []
+            starting_chars = "-*"
             for item in items:
-                item_content = item.lstrip("*- ")
+                item_content = strip_initial_char(item, starting_chars)
                 item_nodes = text_to_textnodes(item_content)
                 line = []
                 for thing in item_nodes:
