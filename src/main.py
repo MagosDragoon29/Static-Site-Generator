@@ -3,7 +3,7 @@ import shutil
 from textnode import TextNode
 from markdown_blocks import markdown_to_html_node
 from htmlnode import (HTMLNode, LeafNode, ParentNode)
-#page intentionally left blank
+#space intentionally left blank
 
 #print("hello world")
 
@@ -19,7 +19,7 @@ def main():
     #test_case = TextNode("This is a TextNode", "bold", "https://www.boot.dev/")
     #print(test_case)
     copy_files(static_dir)
-    generate_page(os.path.join(parent_dir,'content/index.md'), os.path.join(parent_dir,'template.html'), public_dir)
+    generate_page_recursively(os.path.join(parent_dir,'content'), os.path.join(parent_dir,'template.html'), public_dir)
     pass
 
 def copy_files(source_dir, sub_dir = None):
@@ -69,5 +69,26 @@ def generate_page(from_path, template_path, dest_path):
     result = template.replace("{{ Title }}", title).replace("{{ Content }}", html_contents)
     with open(full_dest_path, 'w', encoding='utf-8') as html_file:
         html_file.write(result)
-# page intentionally left blank    
+
+def generate_page_recursively(dir_path_content, template_path, dest_dir_path):
+    with open(template_path, 'r', encoding='utf-8') as temp:
+        template = temp.read()
+    all_items = os.listdir(dir_path_content)
+    for item in all_items:
+        item_path = os.path.join(dir_path_content, item)
+        base_name = os.path.basename(item)
+        name, ext = os.path.splitext(base_name)
+        if os.path.isfile(item_path):
+            if ext.lower() == '.md':
+                generate_page(item_path, template_path, dest_dir_path)
+            else: 
+                print(f"Skipping non-markdown file: {item_path}")
+        elif os.path.isdir(item_path):
+            new_dest_dir_path = os.path.join(dest_dir_path, name)
+            os.makedirs(new_dest_dir_path, exist_ok = True)
+            generate_page_recursively(item_path, template_path, new_dest_dir_path)
+        else:
+            print(f"Skipping non-file entry: f{item_path}")
+
+# space intentionally left blank    
 main()
